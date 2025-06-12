@@ -1,24 +1,25 @@
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import { createServer } from 'http';
-import { parse } from 'url';
-
 export const config = {
   runtime: 'edge',
 };
 
 export default async function handler(req) {
-  const { searchParams } = new URL(req.url);
-  const target = searchParams.get('url');
+  const url = new URL(req.url);
+  const target = url.searchParams.get("url");
 
   if (!target) {
     return new Response("Missing 'url' param", { status: 400 });
   }
 
-  const resp = await fetch(target, {
-    headers: req.headers,
+  const proxiedResponse = await fetch(target, {
     method: req.method,
-    redirect: 'manual',
+    headers: req.headers,
+    redirect: "manual"
   });
 
-  return resp;
+  const body = await proxiedResponse.text();
+
+  return new Response(body, {
+    status: proxiedResponse.status,
+    headers: proxiedResponse.headers
+  });
 }
