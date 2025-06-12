@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>유튜브 프록시 검색기</title>
+</head>
+<body style="background:#111; color:#fff; font-family:sans-serif; text-align:center; margin-top:5em;">
+  <h1>🔍 유튜브 검색</h1>
+  <form id="searchForm">
+    <input type="text" id="query" placeholder="검색어를 입력하세요" style="padding:10px; font-size:1em;">
+    <button type="submit" style="padding:10px;">검색</button>
+  </form>
+
+  <script>
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const query = document.getElementById("query").value;
+      const encoded = encodeURIComponent(query);
+      const target = `https://www.youtube.com/results?search_query=${encoded}`;
+      window.location.href = `/proxy?url=${encodeURIComponent(target)}`;
+    });
+  </script>
+</body>
+</html>
